@@ -1,74 +1,65 @@
-#SingleInstance force
-#Persistent
-
 ; Numpad buttons (0-9) -> PowerToys -> F13-F22
 ;                                 (Optionally) -> AHK Keybind -> Program
 ; Total of 10 macros possible
-
-DetectHiddenWindows, On
+; In the future, modifier keys could be used to increase the amount of macros, e.g. ^F13
 
 display := "extend"
-audioDevice := "speakers"
 
 F13::
-	; Discord - Mute
-	; Discord doesn't support binding F13+
-	SendInput ^+!{F1}
-return
-
-F14::
-	; Discord - Deafen
-	; Discord doesn't support binding F13+
-	SendInput ^+!{F2}
-return
-
-F15::
-	; Swap audio output device
-	if (audioDevice = "speakers") {
-		Run nircmd setdefaultsounddevice "Headphones"
-		audioDevice := "headphones"
-	} else {
-		Run nircmd setdefaultsounddevice "Speakers"
-		audioDevice := "speakers"
-	}
-return
-
-F16::
+{
 	; Swap between 1 or 2 monitors
+	global display
+
 	if (display = "extend") {
-		Run DisplaySwitch.exe /external
+		Run "DisplaySwitch.exe /external"
 		display := "external"
 	} else {
-		Run DisplaySwitch.exe /extend
+		Run "DisplaySwitch.exe /extend"
 		display := "extend"
 	}
-return
+}
+
+F14::
+{
+	Run "nircmd muteappvolume firefox.exe 2"
+}
+
+F15::
+{
+	Run "nircmd muteappvolume discord.exe 2"
+}
+
+F16::
+{
+	Run "nircmd muteappvolume focused 2"
+}
 
 F17::
-	; Screenshot active window
-	SendInput !{PrintScreen}
-return
+{
+	Run "nircmd changeappvolume firefox.exe -0.1"
+}
 
 F18::
-	; Volume -10
-	SoundSet -10
-return
+{
+	Run "nircmd changeappvolume discord.exe -0.1"
+}
 
 F19::
-	; Mute Firefox volume
-	Run nircmd muteappvolume firefox.exe 2
-return
+{
+	Run "nircmd changeappvolume focused -0.1"
+}
 
 F20::
-	; TODO
-return
+{
+	Run "nircmd changeappvolume firefox.exe 0.1"
+}
 
 F21::
-	; Volume +10
-	Soundset +10
-return
+{
+	Run "nircmd changeappvolume discord.exe 0.1"
+}
 
 F22::
-	; Toggle volume mute
-	SoundSet, +1,, Mute
-return
+{
+	Run "nircmd changeappvolume focused 0.1"
+}
